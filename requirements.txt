@@ -1,4 +1,0 @@
-opencv-python
-screeninfo
-ursina 
-sympy

@@ -1,4 +1,4 @@
-from ursina import Ursina, Entity, EditorCamera, Sky
+from ursina import Ursina, Entity, EditorCamera, Sky, Slider, Text
 from math import pi
 
 SUN_RADIUS = 6.957 * (10**8)
@@ -13,9 +13,9 @@ old_pos = (0,0)
 
 class Star(Entity):
     def __init__(self, radius, temperture) -> None:
-        super().__init__(model = "sphere", texture = './recources/8k_sun.jpg', scale = 100)
-        self.radius, self.temperture = radius, temperture
-        self.lifetime = SUN_LIFE * ((8.852 * (10**20) * (radius **0.571) * ((temperture) ** 1.142)) / SUN_MASS) ** 2.5
+        super().__init__(model = "sphere", texture = 'sun_texture.jpg', scale = 100)
+        self.inital_lifetime = SUN_LIFE * ((8.852 * (10**20) * (radius **0.571) * ((temperture) ** 1.142)) / SUN_MASS) ** 2.5
+        self.radius, self.temperture, self.lifetime = radius, temperture, self.inital_lifetime
         self.luminenecence = lambda: SB * (4 * pi * (self.radius**2)) * (self.temperture**4)
         self.mass = lambda: (self.lifetime / SUN_LIFE)**(1/2.5) * SUN_MASS
 
@@ -32,12 +32,16 @@ class Star(Entity):
         self.scale = self.radius*2 / 10**8
 
 def update():
-    a.lifetime -= 1
+    #a.lifetime = s.value*a.inital_lifetime
     a.update()
+    a.color = "#0046bd"
     print(a.lifetime, a.temperture)
-# if __name__ == '__main__':
-app = Ursina()
-a = Star((6.957 * (10**8)), 5778)
-Sky(color="#000000")
-camera = EditorCamera()
-app.run()
+
+if __name__ == '__main__':
+    app = Ursina()
+    a = Star((6.957 * (10**8)), 5778)
+    s = Slider(min=0, max=1, step=0.1, vertical=False)
+    s.label.origin = (0,-1)
+    Sky(color="#000000")
+    camera = EditorCamera()
+    app.run()
