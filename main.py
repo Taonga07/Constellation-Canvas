@@ -1,4 +1,4 @@
-from ursina import Ursina, Entity, EditorCamera, Text
+from ursina import Ursina, Entity, EditorCamera, Sky
 from math import pi
 
 SUN_RADIUS = 6.957 * (10**8)
@@ -18,7 +18,7 @@ class Star(Entity):
         self.lifetime = SUN_LIFE * ((8.852 * (10**20) * (radius **0.571) * ((temperture) ** 1.142)) / SUN_MASS) ** 2.5
         self.luminenecence = lambda: SB * (4 * pi * (self.radius**2)) * (self.temperture**4)
         self.mass = lambda: (self.lifetime / SUN_LIFE)**(1/2.5) * SUN_MASS
-        
+
     def update(self) -> None:
         self.radius = (((self.lifetime / SUN_LIFE) ** (1/2.5) * SUN_MASS) / (8.852 * 10**20 * (self.temperture ** 1.142)) ) ** (1/0.571)
         self.temperture = (((self.lifetime / SUN_LIFE) ** (1/2.5) * SUN_MASS) / (8.852 * 10**20 * (self.radius ** 0.571)) ) ** (1/1.142)
@@ -29,15 +29,15 @@ class Star(Entity):
         if 10000 > self.temperture >= 7000: self.color =  colours[3]
         if 7000 > self.temperture >= 6000: self.color =  colours[4]
         if 5000 > self.temperture >= 3000: self.color =  colours[5]
+        self.scale = self.radius*2 / 10**8
 
 def update():
     a.lifetime -= 1
-    a.update_radius()
-    a.update_temp()
-    a.color = a.set_colour()
+    a.update()
     print(a.lifetime, a.temperture)
 # if __name__ == '__main__':
 app = Ursina()
 a = Star((6.957 * (10**8)), 5778)
+Sky(color="#000000")
 camera = EditorCamera()
 app.run()
